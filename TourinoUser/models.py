@@ -1,6 +1,10 @@
 from django.db import models
 from TourinoAdmin.models import Product,Tour,Post
-# Create your models here.
+import json
+from django.core.signing import Signer
+
+signer = Signer()
+
 def payment(jsondata):
     '''
         after adding payment we handlethis part
@@ -60,16 +64,16 @@ class TourinoUser(models.Model):
         user = cls(
             email=data['email'],
             password=signer.sign(['password']),
-            username=data['email'],
+            username=data['username'],
             phone=data['phone'],
             news= bool(data['news'])
         )
+        user.save()
         wallet = Wallet.newWallet(user)
         return user.toDict()
 
     def signIn(self, candidate):
-        # userpwd = signer.unsign(self.password)
-        # TODO : checking with signer later
+        userpwd = signer.unsign(self.password)
         if self.password != candidate:
             return False
         return True
@@ -81,10 +85,20 @@ class TourinoUser(models.Model):
             arg jsondata : contains int(id)
             returns user info
         '''
-        data = jsondata.decode('utf-8')
+        data = json.loads(jsondata.decode('utf-8'))
         id = int(data['id'])
-        user = User.objects.get(pk=int(id))
+        user = TourinoUser.objects.get(pk=int(id))
 
+    @staticmethod
+    def findByUsername(jsondata):
+        ''' 
+            returns a user json profile 
+            arg jsondata : contains username
+            returns user info
+        '''
+        data = jsondata.decode('utf-8')
+        username = json.loads(data)['username']
+        user = TourinoUser.objects.get(username=username)
 
 class TourComment(models.Model):
     rate = models.DecimalField(max_digits=2, decimal_places=1)

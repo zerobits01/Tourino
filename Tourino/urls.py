@@ -16,8 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from TourinoAdmin import urls as taurl
-
+from TourinoUser import urls as turl
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('tourinoadmin/',include(taurl)),
+    path('user/',include(turl)),
 ]
