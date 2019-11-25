@@ -57,6 +57,7 @@ class TourinoAdmin(models.Model):
             returns Boolean if the hashed password is equal or not
         '''
         # userpwd = signer.unsign(self.password)
+        # TODO : checking with signer after test
         if self.password != candidate:
             return False
         return True
