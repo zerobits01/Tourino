@@ -1,6 +1,6 @@
 from django.db import models
-from django.core.signing import Signer
 import json
+from Tourino.helpers import Hasher
 # Create your models here.
 
 

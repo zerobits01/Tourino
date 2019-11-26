@@ -2,12 +2,38 @@ from django.shortcuts import render
 from django.core import signing
 from . import models as M
 import json
-from django.http import JsonResponse
-from Tourino.helpers import jwt_auth
+from django.http import JsonResponse,request
 from django.views.decorators.csrf import csrf_protect,csrf_exempt
-# Create your views here.
 
-@csrf_exempt
+
+def jwt_auth(old_fuction):
+    '''
+        decorator for checking access token authentication
+        using django signer
+    '''
+    def new_function(request,*args, **kwargs):
+       
+        jwt = request.environ['HTTP_USER_JWT'] 
+        
+        # this is the way of being the best, first i print the dict and then i
+        # copied that and structured that then with my knowledge i found how to access it
+        
+        if jwt is not None:
+            loaded = signing.loads(jwt)
+            user = M.TourinoUser.objects.get(pk=loaded['id'])
+        else:
+            return JsonResponse({
+                'msg': "access denied"
+            }, status=403)
+        if user is None:
+            return JsonResponse({
+                'msg': "access denied"
+            }, status=403)
+        return old_fuction(request,*args, **kwargs)
+    return new_function
+
+
+@csrf_exempt # for csrf escape
 def signUp(req):
     if req.method == 'POST':
         try:
@@ -27,7 +53,8 @@ def logIn(req):
     if req.method == 'POST':     
         data = json.loads(req.body.decode('utf-8'))
         password = data['password']
-        user = M.TourinoUser.findByUsername(req.body)
+        username = data['username']
+        user = M.TourinoUser.findByUsername(username)
         try:
             flag = user.signIn(password)
             token = signing.dumps({"id": user.id})
@@ -43,6 +70,7 @@ def logIn(req):
             'error' : 'this is method is not supported'
         },status=406)
 
+@csrf_exempt
 @jwt_auth
 def comment(req):
     if req.method == 'POST':
@@ -63,6 +91,7 @@ def comment(req):
             'error' : 'this is method is not supported'
         },status=406)
 
+@csrf_exempt
 @jwt_auth
 def checkCart(req):
     if req.method == 'POST':

@@ -1,11 +1,9 @@
 '''
     adding all apps helpers here
 '''
-
-from django.core import signing
-from django.http import JsonResponse
-import json
-from TourinoUser.models import TourinoUser
+import hashlib
+# from django.apps import apps
+# TourinoUser = apps.get_model('TourinoUser', 'TourinoUser')
 
 '''
 def decorator(arg1, arg2):    
@@ -23,26 +21,32 @@ def print_args(*args):
 '''
 
 
-def jwt_auth(old_fuction):
-    def new_function(request, *args, **kwargs):
-        if request.headers['user-jwt'] is not None:
-            token = request.headers['user-jwt']
-            loaded = signing.loads(token)
-            user = TourinoUser.objects.get(pk=loaded['id'])
-        else:
-            return JsonResponse({
-                'msg': "access denied"
-            }, status=403)
-            # request.headers['user-jwt']
-            # loaded = signing.loads(token)
-            # user = RimaleAdmin.objects.get(pk=loaded['id'])
-
-        if user is None:
-            return JsonResponse({
-                'msg': "access denied"
-            }, status=403)
-        old_fuction(request, *args, **kwargs)
-    return new_function
-
 
 # TODO : writing logger
+
+
+# hash functions : 
+
+
+class Hasher:
+    @staticmethod 
+    def makeHash(string):
+        '''
+            returns the hash value of string input
+        '''
+        hashed = hashlib.sha256(string.encode())
+        hex_of_hashed = hashed.hexdigest()
+        return hex_of_hashed
+
+    @staticmethod
+    def checkHash(string, candidate):
+        '''
+            string : hash value
+            candidate : the input to check with hash value
+            returns True if equal else False
+        '''
+        hashed = hashlib.sha256(string.encode())
+        hex_of_string = hashed.hexdigest()
+        hashed = hashlib.sha256(candidate.encode())
+        hex_of_candidate = hashed.hexdigest()
+        return hex_of_string == hex_of_string 

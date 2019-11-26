@@ -1,9 +1,7 @@
 from django.db import models
 from TourinoAdmin.models import Product,Tour,Post
 import json
-from django.core.signing import Signer
-
-signer = Signer()
+from Tourino.helpers import Hasher
 
 def payment(jsondata):
     '''
@@ -63,7 +61,7 @@ class TourinoUser(models.Model):
         data = json.loads(data)
         user = cls(
             email=data['email'],
-            password=signer.sign(['password']),
+            password=Hasher.makeHash(data['password']),
             username=data['username'],
             phone=data['phone'],
             news= bool(data['news'])
@@ -73,10 +71,12 @@ class TourinoUser(models.Model):
         return user.toDict()
 
     def signIn(self, candidate):
-        userpwd = signer.unsign(self.password)
-        if self.password != candidate:
-            return False
-        return True
+        '''
+            returns Boolean that if the user can
+            login with candidate password
+        '''
+        return Hasher.checkHash(self.password,candidate)
+    
 
     @staticmethod
     def findById(jsondata):
@@ -90,15 +90,14 @@ class TourinoUser(models.Model):
         user = TourinoUser.objects.get(pk=int(id))
 
     @staticmethod
-    def findByUsername(jsondata):
+    def findByUsername(username):
         ''' 
             returns a user json profile 
             arg jsondata : contains username
             returns user info
         '''
-        data = jsondata.decode('utf-8')
-        username = json.loads(data)['username']
         user = TourinoUser.objects.get(username=username)
+        return user
 
 class TourComment(models.Model):
     rate = models.DecimalField(max_digits=2, decimal_places=1)
