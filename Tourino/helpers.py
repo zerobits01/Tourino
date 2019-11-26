@@ -50,3 +50,6 @@ class Hasher:
         hashed = hashlib.sha256(candidate.encode())
         hex_of_candidate = hashed.hexdigest()
         return hex_of_string == hex_of_string 
+
+
+print('[+] done')
