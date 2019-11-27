@@ -95,7 +95,8 @@ class Product(models.Model):
             'price': self.price,
             'image_url': self.image_url,
             'description': self.description,
-            'count': self.count
+            'count': self.count,
+            'comments' : [x.toDict() for x in self.productcomment_set.all()]
         }
         return data
 
@@ -217,7 +218,8 @@ class Tour(models.Model):
             'location': self.location,
             'online': self.online,
             'image_url': self.image_url,
-            'description': self.description
+            'description': self.description,
+            'comments' : [x.toDict() for x in self.tourcomment_set.all()]
         }
         return data
 

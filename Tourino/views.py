@@ -109,7 +109,9 @@ def getProductById(request, id):
     if request.method == 'GET':
         try:
             pro = Product.getById(id)
-            return JsonResponse(pro)
+            return JsonResponse({
+                'products' : pro  
+            })
         except Exception as e:
             return JsonResponse({
                 'err': e

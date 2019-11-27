@@ -131,8 +131,8 @@ class TourComment(models.Model):
 class ProductComment(models.Model):
     rate = models.DecimalField(max_digits=2, decimal_places=1)
     comment = models.TextField()
-    user = models.OneToOneField(TourinoUser, on_delete=models.CASCADE)
-    product = models.OneToOneField(Product, on_delete=models.CASCADE)
+    user = models.ForeignKey(TourinoUser, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     
     def toDict(self):
         data = {
