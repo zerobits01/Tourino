@@ -17,8 +17,18 @@ from django.contrib import admin
 from django.urls import path, include
 from TourinoAdmin import urls as taurl
 from TourinoUser import urls as turl
+from . import views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', views.homePage),
+    path('products', views.productsHome),
+    path('tours', views.tourHome),
+    path('posts', views.postHome),
+    path('search', views.searchBar),
+    path('post/<int:id>/',views.getPostById),
+    path('product/<int:id>/',views.getProductById),
+    path('tour/<int:id>/',views.getTourById), 
     path('tourinoadmin/',include(taurl)),
     path('user/',include(turl)),
 ]

@@ -90,7 +90,7 @@ class Product(models.Model):
                 }
         '''
         data = {
-            'type': self.type,
+            'ptype': self.ptype,
             'name': self.name,
             'price': self.price,
             'image_url': self.image_url,
@@ -135,7 +135,7 @@ class Product(models.Model):
         '''
         products = Product.objects.order_by('id').values('id', 'name',
                                                          'image_url', 'ptype', 'price', 'count')
-        return products
+        return list(products)
 
     @staticmethod
     def getAll():
@@ -144,7 +144,7 @@ class Product(models.Model):
         '''
         products = Product.objects.order_by('id').values('id', 'name',
                                                          'image_url', 'ptype', 'price', 'count')
-        return products
+        return list(products)
 
     @staticmethod
     def getById(id):
@@ -211,7 +211,7 @@ class Tour(models.Model):
         data = {
             'name': self.name,
             'price': self.price,
-            'length': self.length,
+            'duration': self.duration,
             'end': self.end,
             'start': self.start,
             'location': self.location,
@@ -257,7 +257,7 @@ class Tour(models.Model):
         '''
         tours = Tour.objects.order_by('id').values('id', 'name',
                                                    'image_url', 'price', 'online')
-        return tours
+        return list(tours)
 
     @staticmethod
     def getAll():
@@ -268,7 +268,7 @@ class Tour(models.Model):
         '''
         tours = Tour.objects.order_by('id').values('id', 'name',
                                                    'image_url', 'price', 'online')
-        return tours
+        return list(tours)
 
     @staticmethod
     def getById(id):
@@ -309,7 +309,7 @@ class Tour(models.Model):
         return data.toDict()
 
 class Post(models.Model):
-    user = models.OneToOneField(TourinoAdmin, on_delete=models.CASCADE)
+    user = models.ForeignKey(TourinoAdmin, on_delete=models.CASCADE)
     title = models.CharField(max_length=255, unique=True)
     text = models.TextField()
     image_url = models.TextField(blank=True)
@@ -320,8 +320,8 @@ class Post(models.Model):
                 for get methods
         '''
         data = {
-            'user': self.user__username,
-            'name': self.name,
+            'user': self.user.username,
+            'name': self.title,
             'text': self.text,
             'image_url': self.image_url
         }
@@ -358,12 +358,12 @@ class Post(models.Model):
         posts = Post.objects.order_by('id').values(
             'title', 'image_url').order_by('id') 
         # TODO : handling last 10 objects
-        return posts
+        return list(posts)
 
     @staticmethod
     def getAll():
         posts = Post.objects.order_by('id').values('title', 'image_url')
-        return posts
+        return list(posts)
 
     @staticmethod
     def getById(id):
