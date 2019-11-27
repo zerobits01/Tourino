@@ -102,16 +102,16 @@ class TourinoUser(models.Model):
 class TourComment(models.Model):
     rate = models.DecimalField(max_digits=2, decimal_places=1)
     comment = models.TextField()
-    user = models.OneToOneField(TourinoUser, on_delete=models.CASCADE)
-    tour = models.OneToOneField(Tour, on_delete=models.CASCADE)
+    user = models.ForeignKey(TourinoUser, on_delete=models.CASCADE)
+    tour = models.ForeignKey(Tour, on_delete=models.CASCADE)
 
     
     def toDict(self):
         data = {
             'rate': self.rate,
             'comment': self.comment,
-            'username': self.user__username,
-            'tour' : self.tour__id
+            'username': self.user.username,
+            'tour' : self.tour.id
         }
         return data
 
@@ -120,7 +120,8 @@ class TourComment(models.Model):
         data = jsondata.decode('utf-8')
         data = json.loads(data)
         tour = Tour.objects.get(pk=int(data['tourid']))
-        tourcomment = TourinoUser.objects.get(pk=int(data['userid'])).tourcomment_set.create(
+        user = TourinoUser.objects.get(pk=int(data['userid']));
+        tourcomment = user.tourcomment_set.create(
             rate =  float(data['rate']),
             comment= data['comment'],
             tour= tour
@@ -137,13 +138,19 @@ class ProductComment(models.Model):
         data = {
             'rate': self.rate,
             'comment': self.comment,
-            'username': self.user__username,
-            'product' : self.product__id
+            'username': self.user.username,
+            'product' : self.product.id
         }
         return data
 
     @classmethod
     def newComment(cls, jsondata):
+        '''
+            rate= float(),
+            comment,
+            product,
+            user
+        '''
         data = jsondata.decode('utf-8')
         data = json.loads(data)
         product = Product.objects.get(pk=int(data['productid']))

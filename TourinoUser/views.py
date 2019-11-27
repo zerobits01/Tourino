@@ -34,10 +34,10 @@ def jwt_auth(old_fuction):
 
 
 @csrf_exempt # for csrf escape
-def signUp(req):
-    if req.method == 'POST':
+def signUp(request):
+    if request.method == 'POST':
         try:
-            data = M.TourinoUser.register(req.body)
+            data = M.TourinoUser.register(request.body)
             return JsonResponse(data)
         except Exception as e:
             return JsonResponse({
@@ -49,9 +49,9 @@ def signUp(req):
         },status=406)
 
 @csrf_exempt
-def logIn(req):
-    if req.method == 'POST':     
-        data = json.loads(req.body.decode('utf-8'))
+def logIn(request):
+    if request.method == 'POST':     
+        data = json.loads(request.body.decode('utf-8'))
         password = data['password']
         username = data['username']
         user = M.TourinoUser.findByUsername(username)
@@ -72,15 +72,15 @@ def logIn(req):
 
 @csrf_exempt
 @jwt_auth
-def comment(req):
-    if req.method == 'POST':
+def comment(request):
+    if request.method == 'POST':
         try :
-            data = json.loads(req.body.decode('utf-8'))
+            data = json.loads(request.body.decode('utf-8'))
             typ = data['type']
             if typ == 'P':
-                comment = M.ProductComment.newComment(req.body)
+                comment = M.ProductComment.newComment(request.body)
             else:
-                comment = M.TourComment.newComment(req.body)
+                comment = M.TourComment.newComment(request.body)
             return JsonResponse(comment)
         except Exception as e:
             return JsonResponse({
@@ -93,10 +93,10 @@ def comment(req):
 
 @csrf_exempt
 @jwt_auth
-def checkCart(req):
-    if req.method == 'POST':
+def checkCart(request):
+    if request.method == 'POST':
         try :
-            data = M.myCartDict(req.body)
+            data = M.myCartDict(request.body)
             return JsonResponse(data)
         except Exception as e:
             return JsonResponse({
@@ -110,13 +110,13 @@ def checkCart(req):
 '''
 # after adding real payment
 @jwt_auth
-def checkWallet(req):
+def checkWallet(request):
     # everything this user payed before
     pass
 
 # need jwt auth and decorators
 @jwt_auth
-def payment(req):
+def payment(request):
     # 
     pass
 '''

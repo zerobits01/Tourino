@@ -1,6 +1,7 @@
 from TourinoAdmin.models import Product, Tour, search, Post
 from django.http import JsonResponse, request
 
+# TODO : adding comments and rates to return that
 
 def homePage(request):
     # TODO Next : pagination with url get
