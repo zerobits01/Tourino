@@ -1,8 +1,8 @@
 from TourinoAdmin.models import Product, Tour, search, Post
 from django.http import JsonResponse, request
-
+from django.views.decorators.csrf import csrf_exempt
 # TODO : adding comments and rates to return that
-
+@csrf_exempt
 def homePage(request):
     # TODO Next : pagination with url get
     if request.method == 'GET':
@@ -24,6 +24,7 @@ def homePage(request):
             'error' : 'this is method is not supported'
         },status=406)
 
+@csrf_exempt
 def productsHome(request):
     # TODO Next : pagination
     if request.method == 'GET':
@@ -41,6 +42,7 @@ def productsHome(request):
             'error' : 'this is method is not supported'
         },status=406)
 
+@csrf_exempt
 def tourHome(request):
     # TODO Next : pagination
     if request.method == 'GET':
@@ -58,6 +60,7 @@ def tourHome(request):
             'error' : 'this is method is not supported'
         },status=406)
 
+@csrf_exempt
 def postHome(request):
     # TODO Next : pagination
     if request.method == 'GET':
@@ -75,6 +78,7 @@ def postHome(request):
             'error' : 'this is method is not supported'
         },status=406)
 
+@csrf_exempt
 def searchBar(request):
     if request.method == 'POST':
         try:
@@ -91,6 +95,7 @@ def searchBar(request):
             'error' : 'this is method is not supported'
         },status=406)
 
+@csrf_exempt
 def getPostById(request, id):
     if request.method == 'GET':
         try:
@@ -105,6 +110,7 @@ def getPostById(request, id):
             'error' : 'this is method is not supported'
         },status=406)
 
+@csrf_exempt
 def getProductById(request, id):
     if request.method == 'GET':
         try:
@@ -121,6 +127,7 @@ def getProductById(request, id):
             'error' : 'this is method is not supported'
         },status=406)
 
+@csrf_exempt
 def getTourById(request, id):
     if request.method == 'GET':
             try:

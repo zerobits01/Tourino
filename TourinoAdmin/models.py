@@ -400,23 +400,26 @@ def search(jsondata):
     data = json.loads(data)
     data = data['search'].split()
     # in a for creating some links with name
-    products = {}
-    tours = {}
-    posts = {}
+    products = []
+    tours = []
+    posts = []
     for word in data:
         products = products + \
-            set(Product.objects.filter(name__icontains=word).values(
-                'id', 'name', 'image_url', 'rate'))
+            [
+                x.toDict() for x in Product.objects.filter(name__icontains=word) # .values('id', 'name', 'image_url')
+            ]
         tours = tours + \
-            set(Tour.objects.filter(name__icontains=word).values(
-                'id', 'name', 'image_url', 'rate'))
+            [
+                x.toDict() for x in Tour.objects.filter(name__icontains=word) # .values('id', 'name', 'image_url')
+            ]
         posts = posts + \
-            set(Post.objects.filter(name__icontains=word).values(
-                'id', 'name', 'image_url', 'rate'))
+            [
+                x.toDict() for x in Post.objects.filter(title__icontains=word) # .values('id', 'name', 'image_url')
+            ]
     ans = {
         'products': products,
         'tours': tours,
-        'post': post,
+        'post': posts,
         'basepathp': 'localhost/products',
         'basepatht': 'localhost/tours',  # just add the id at the end
         'basepathp': 'localhost/posts'  # just add the id at the end
