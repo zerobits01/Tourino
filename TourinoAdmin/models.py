@@ -1,8 +1,7 @@
 from django.db import models
 import json
 from Tourino.helpers import Hasher
-# Create your models here.
-
+from Tourino.signals import mail_post
 
 class TourinoAdmin(models.Model):
     Roles = [
@@ -329,6 +328,10 @@ class Post(models.Model):
         }
         return data
 
+    def save(self, *args, **kwargs): 
+        super(Post, self).save(*args, **kwargs) 
+        mail_post.send(sender=self.__class__, post=self)
+    
     @classmethod
     def newPost(cls, jsondata,id):
         '''
@@ -349,7 +352,6 @@ class Post(models.Model):
             text=data['text'],
             image_url=data['image_url']
         )
-        # TODO : mail_post(sender=cls.__class__, post=post)
         return post.toDict()
 
     @staticmethod
