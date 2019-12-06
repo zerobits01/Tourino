@@ -15,15 +15,14 @@ def my_callback(sender, **kwargs):
 
         basepath = 'localhost/blog'
         link = basepath + '/' + str(post.id)
-
         subject, from_email = post.title, 'from@example.com'
 
         to = TourinoUser.objects.filter(news__exact=True).values('email')
-
         text_content = post.text
         html_content = '<a>%s</a>' % (link)
         msg = EmailMultiAlternatives(subject, text_content, from_email, to)
         msg.attach_alternative(html_content, "text/html")
+        print(to)
         print("trying to send")
         msg.send()
         print("sent!!!")
