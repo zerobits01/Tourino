@@ -4,8 +4,8 @@ from Tourino.helpers import Hasher
 
 class TourinoUser(models.Model):
     email = models.EmailField()
-    phone = models.CharField(max_length=13)
-    username = models.CharField(max_length=15,unique=True)
+    phone = models.CharField(max_length=13,blank=True)
+    username = models.CharField(max_length=150,unique=True)
     password = models.TextField()
     news = models.BooleanField(default=False)
 
@@ -15,6 +15,7 @@ class TourinoUser(models.Model):
                 contains: email phone username
         '''
         data = {
+            'id' : self.id,
             'email': self.email,
             'phone': self.phone,
             'username': self.username,
@@ -38,7 +39,7 @@ class TourinoUser(models.Model):
             news= bool(data['news'])
         )
         user.save()
-        wallet = Wallet.newWallet(user)
+        # wallet = Wallet.newWallet(user)
         return user.toDict()
 
     def signIn(self, candidate):

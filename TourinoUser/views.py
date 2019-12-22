@@ -38,6 +38,8 @@ def signUp(request):
     if request.method == 'POST':
         try:
             data = M.TourinoUser.register(request.body)
+            token = signing.dumps({"id": data['id']})
+            data['token'] = token
             return JsonResponse(data)
         except Exception as e:
             return JsonResponse({

@@ -88,14 +88,31 @@ class Product(models.Model):
                     count in store
                 }
         '''
+        if self.count == 0 :
+            condition = {
+                'color' : 'red',
+                'situation' : 'ناموجود'
+            }
+        else :
+            condition = {
+                'color' : 'green',
+                'situation' : 'موجود'
+            }
+        comments = [x.toDict() for x in self.productcomment_set.all()]
+        avg = 0
+        for y in comments :
+            avg = (avg + float(y['rate']))
+        length = len(comments) if len(comments) != 0 else 1
         data = {
             'ptype': self.ptype,
             'name': self.name,
             'price': self.price,
+            'condition' : condition,
             'image_url': self.image_url,
             'description': self.description,
             'count': self.count,
-            'comments' : [x.toDict() for x in self.productcomment_set.all()]
+            'rate' : avg/length,
+            'comments' : comments
         }
         return data
 
@@ -142,9 +159,8 @@ class Product(models.Model):
         ''' 
             returns all products sort by date
         '''
-        products = Product.objects.order_by('id').values('id', 'name',
-                                                         'image_url', 'ptype', 'price', 'count')
-        return list(products)
+        products = Product.objects.order_by('id')
+        return [x.toDict() for x in products]
 
     @staticmethod
     def getById(id):
@@ -208,6 +224,11 @@ class Tour(models.Model):
             returns just dictionary of data
             to return as jsonresponse in the app
         '''
+        avg = 0
+        comments = [x.toDict() for x in self.tourcomment_set.all()]
+        for y in comments :
+            avg = (avg + float(y['rate']))
+        length = len(comments) if len(comments) != 0 else 1
         data = {
             'name': self.name,
             'price': self.price,
@@ -217,6 +238,7 @@ class Tour(models.Model):
             'location': self.location,
             'online': self.online,
             'image_url': self.image_url,
+            'rate' : avg/length,
             'description': self.description,
             'comments' : [x.toDict() for x in self.tourcomment_set.all()]
         }
@@ -267,9 +289,10 @@ class Tour(models.Model):
             with properties :
                 'id', 'name','image_url', 'price', 'online'
         '''
-        tours = Tour.objects.order_by('id').values('id', 'name',
-                                                   'image_url', 'price', 'online')
-        return list(tours)
+        tours = Tour.objects.order_by('id')     # .values('id', 'name',
+        #                                            'image_url', 'price', 'online')
+        tours = [x.toDict() for x in tours]
+        return tours
 
     @staticmethod
     def getById(id):
@@ -321,9 +344,13 @@ class Post(models.Model):
                 for get methods
         '''
         data = {
-            'user': self.user.username,
-            'name': self.title,
-            'text': self.text,
+            'id' : self.id,
+            'writer': self.user.username,
+            'title': self.title,
+            'part1' : self.text,
+            'part2' : '',
+            'part3' : '' ,
+            'subtitle': self.text[0:30],
             'image_url': self.image_url
         }
         return data
@@ -366,8 +393,8 @@ class Post(models.Model):
 
     @staticmethod
     def getAll():
-        posts = Post.objects.order_by('id').values('title', 'image_url')
-        return list(posts)
+        posts = Post.objects.order_by('id') # .values('title', 'image_url')
+        return [x.toDict() for x in posts]
 
     @staticmethod
     def getById(id):

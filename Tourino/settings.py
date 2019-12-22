@@ -25,8 +25,15 @@ SECRET_KEY = '8z+yu&jm8jt9dag(@1l$*4iz05r0k%-$2*@ozq)j(@g1b-gi4a'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.59.163','localhost','0.0.0.0']
+ALLOWED_HOSTS = ['localhost','0.0.0.0','172.17.41.22','172.17.37.249','192.168.171.1']
+CORS_ORIGIN_ALLOW_ALL = True
 
+'''
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_WHITELIST = (
+       'http://localhost:4200',
+)
+'''
 
 # Application definition
 
@@ -39,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'TourinoAdmin',
     'TourinoUser',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -49,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'Tourino.urls'
