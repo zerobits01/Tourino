@@ -386,14 +386,18 @@ class Post(models.Model):
         ''' 
             return array of sorted last 10
         '''
-        posts = Post.objects.order_by('id').values(
-            'title', 'image_url').order_by('id') 
-        # TODO : handling last 10 objects
-        return list(posts)
+        # posts = Post.objects.order_by('id').values(
+        #     'title', 'image_url').order_by('id') 
+        # # TODO : handling last 10 objects
+        # return list(posts)
+        posts = Post.objects.order_by('id') 
+        # .values('title', 'image_url')
+        return [x.toDict() for x in posts]
 
     @staticmethod
     def getAll():
-        posts = Post.objects.order_by('id') # .values('title', 'image_url')
+        posts = Post.objects.order_by('id') 
+        # .values('title', 'image_url')
         return [x.toDict() for x in posts]
 
     @staticmethod
