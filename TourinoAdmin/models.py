@@ -104,6 +104,7 @@ class Product(models.Model):
             avg = (avg + float(y['rate']))
         length = len(comments) if len(comments) != 0 else 1
         data = {
+            'id' : self.id,
             'ptype': self.ptype,
             'name': self.name,
             'price': self.price,
@@ -230,6 +231,7 @@ class Tour(models.Model):
             avg = (avg + float(y['rate']))
         length = len(comments) if len(comments) != 0 else 1
         data = {
+            'id' : self.id,
             'name': self.name,
             'price': self.price,
             'duration': self.duration,

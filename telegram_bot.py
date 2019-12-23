@@ -1,9 +1,9 @@
 import telebot
 import time
 
-token = 'your_token_here'
+token = '1052398123:AAFI2DlIZGJEnLGbjsUVsXqkSsCavmLZ5n0'
 
-bot = telebot.TeleBot(token=token)
+bot = telebot.TeleBot(token)
 
 # for using webhook :
 # @bot.setwebhook(token)
@@ -25,7 +25,7 @@ def start_handler(message):
     """)
 
 
-@bot.message_handler(func=lambda msg: msg.text is not None and '#comment' in msg)
+@bot.message_handler(func=lambda msg: msg.text is not None and '#comment' in msg.text)
 def zbits_handler(message):
     username = '' # TODO : check the message for user name
     bot.reply_to(message,"""{username} ممنون 
@@ -33,7 +33,7 @@ def zbits_handler(message):
     """.format(username=username))
 
 
-@bot.message_handler(func=lambda msg: msg.text is not None and '#package' in msg)
+@bot.message_handler(func=lambda msg: msg.text is not None and '#package' in msg.text)
 def zbits_handler(message):
     # TODO : returning the location of the sent packet with the number asked
     bot.reply_to(message,'package# : \n location : \n time_to_rcv : \n Thank you for your choice.')
@@ -42,4 +42,4 @@ while True:
     try :
         bot.polling()
     except:
-        time.sleep(5)
+        time.sleep(20)

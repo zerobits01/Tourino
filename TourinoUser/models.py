@@ -20,15 +20,15 @@ def myCartDict(jsondata) :
     '''
     data = jsondata.decode('utf-8')
     data = json.loads(data)
-    products = Product.objects.filter(pk__in=data['products']).values('id' , 'name' , 'price')
-    sum = Product.objects.filter(pk__in=data['products']).aggregate(Sum('price'))
-    tours = Tour.objects.filter(pk__in=data['tours']).values('id' , 'name' , 'price')
-    sum1 = Tour.objects.filter(pk__in=data['tours']).aggregate(Sum('price'))
-    sum = sum + sum1 
+    products = Product.objects.filter(pk__in=data['products']) # .values('id' , 'name' , 'price')
+    sum2 = Product.objects.filter(pk__in=data['products']).aggregate(sm=models.Sum('price'))
+    tours = Tour.objects.filter(pk__in=data['tours']) # .values('id' , 'name' , 'price')
+    sum1 = Tour.objects.filter(pk__in=data['tours']).aggregate(sm=models.Sum('price'))
+    sum2 = sum2['sm'] + sum1['sm']
     ans = {
-        'sum' : sum,
-        'products' : products,
-        'tours' : tours
+        'sum' : sum2,
+        'products' : [x.toDict() for x in products],
+        'tours' : [x.toDict() for x in tours]
     }
     return ans
 
